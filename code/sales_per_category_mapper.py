@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# Format of each line is:
+# Content of each line is (separated by the \t character)
 # date | time | store name | item description | cost | method of payment
 #
-# Key is store name, value is cost
+# Key is category, value is cost
 # Write to standard output, separated by a tab
 
 from base import get_stream, close_stream

@@ -5,11 +5,9 @@ import sys
 maxSale = 0
 oldKey = None
 
-# Loop around the data
-# It will be in the format key\tval
-# Where key is the store name, val is the sale amount
+# The input has the format key \t value
 #
-# All the sales for a particular store will be presented,
+# The highest value for a particular store will be presented,
 # then the key will change and we'll be dealing with the next store
 
 for line in sys.stdin:
@@ -33,4 +31,3 @@ for line in sys.stdin:
 
 if oldKey is not None:
     print oldKey, "\t", maxSale
-

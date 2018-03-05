@@ -13,10 +13,7 @@ for line in inf:
             address, identity, username, timestamp, request, statuscode, size = data
 
             requestArray = request.split()
-
-            if len(requestArray) > 1:
-                path = requestArray[1]
-                print "{0}\t{1}".format(path, identity)
+            print "{0}\t{1}".format(address, identity)
 
     except:
         pass

@@ -16,7 +16,7 @@ for line in inf:
 
             if len(requestArray) > 1:
                 path = requestArray[1]
-                print "{0}\t{1}".format(address, identity)
+                print "{0}\t{1}".format(path, identity)
 
     except:
         pass

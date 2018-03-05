@@ -1,9 +1,30 @@
 #!/usr/bin/python
 
+from urlparse import urlparse
 from base import get_stream, close_stream, get_common_log_format
 
 pattern = get_common_log_format()
 inf = get_stream()
+
+
+def extract_path(value):
+    result = ""
+
+    array = value.split()
+
+    if len(array) > 1:
+        result = array[1]
+
+        if result.startswith("http"):
+            parsed_url = urlparse(result)
+
+            if len(parsed_url) > 2:
+                result = parsed_url[2]
+            else:
+                result = ""
+
+    return result
+
 
 for line in inf:
     try:
@@ -12,10 +33,9 @@ for line in inf:
         if len(data) == 7:
             address, identity, username, timestamp, request, statuscode, size = data
 
-            requestArray = request.split()
+            path = extract_path(request)
 
-            if len(requestArray) > 1:
-                path = requestArray[1]
+            if len(path) > 0:
                 print "{0}\t{1}".format(path, identity)
 
     except:

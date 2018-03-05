@@ -29,7 +29,7 @@ for line in sys.stdin:
     value = float(thisSale)
 
     if maxSale < value:
-        maxSale += value
+        maxSale = value
 
 if oldKey is not None:
     print oldKey, "\t", maxSale

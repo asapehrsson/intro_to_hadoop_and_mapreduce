@@ -48,11 +48,18 @@ cat ../data/samples.txt | ./mapper.py | sort | ./reducer.py
 
 ##### Sales breakdown by store
 
-Solved by `total_sales_per_store_mapper` and `total_per_key_reducer`
+Solved by `sales_per_store_mapper` and `total_per_key_reducer`
 Run by
 ```
-hs ./total_sales_per_store_mapper.py ./total_per_key_reducer.py myinput/purchases.txt output_sbbs   
+hadoop jar /usr/lib/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming-2.0.0-mr1-cdh4.1.1.jar -mapper ./sales_per_store_mapper.py -reducer ./total_per_key_reducer.py -file ./base.py -file ./sales_per_store_mapper.py -file ./total_per_key_reducer.py -input myinput -output tmp2
+
 ```
+Output is in tmp2. Check content
+hadoop fs -ls tmp2
+
+Check result by:
+hadoop fs -cat tmp2/part-00000
+
 
 #####  Sales breakdown by product category across all of our stores.
 #####  The monetary value for the highest individual sale for each separate store.

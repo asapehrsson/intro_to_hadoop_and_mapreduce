@@ -10,7 +10,7 @@ Install the virtual machine as described in Lesson 3: HDFS and MapReduce, sectio
 
 Then copy the input file to hdfs (it is used in the map job)
 ```
-hadoop fs -mv data/purchases.txt myinput
+hadoop fs -put data/purchases.txt myinput
 ```
 
 ## Develop and debugging the Python scripts

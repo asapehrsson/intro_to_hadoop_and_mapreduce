@@ -1,20 +1,8 @@
 #!/usr/bin/python
 
-import re
-from base import get_stream, close_stream
+from base import get_stream, close_stream, get_common_log_format
 
-parts = [
-    r'(?P<host>\S+)',  # host %h
-    r'(?P<indent>\S+)',  # indent %l (unused)
-    r'(?P<user>\S+)',  # user %u
-    r'\[(?P<time>.+)\]',  # time %t
-    r'"(?P<request>.*)"',  # request "%r"
-    r'(?P<status>[0-9]+)',  # status %>s
-    r'(?P<size>\S+)'
-]
-
-pattern = re.compile(r'\s+'.join(parts) + r'\s*\Z')
-
+pattern = get_common_log_format()
 inf = get_stream()
 
 for line in inf:

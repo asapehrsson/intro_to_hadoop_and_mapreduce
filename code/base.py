@@ -1,4 +1,5 @@
 import sys
+import re
 
 
 # open a file if given as argument
@@ -19,3 +20,18 @@ def get_stream():
 def close_stream(inf):
     if inf is not sys.stdin:
         inf.close()
+
+
+def get_common_log_format():
+    parts = [
+        r'(?P<host>\S+)',  # host %h
+        r'(?P<indent>\S+)',  # indent %l (unused)
+        r'(?P<user>\S+)',  # user %u
+        r'\[(?P<time>.+)\]',  # time %t
+        r'"(?P<request>.*)"',  # request "%r"
+        r'(?P<status>[0-9]+)',  # status %>s
+        r'(?P<size>\S+)'
+    ]
+
+    pattern = re.compile(r'\s+'.join(parts) + r'\s*\Z')
+    return pattern

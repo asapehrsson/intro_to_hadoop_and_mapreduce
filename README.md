@@ -101,6 +101,4 @@ Where:
 | Description | Mapper | Reducer |
 | :--- | :---  |:---  | 
 | Display the number of hits for each different file on the web site | `sales_per_store_mapper` | `total_per_key_reducer` |
-| Sales breakdown by product category across all stores | `sales_per_category_mapper` | `total_per_key_reducer` |
-| The monetary value for the highest individual sale for each separate store | `sales_per_store_mapper` | `highest_per_key_reducer` |
-| Total sales value across all the stores, and the total number of sales | `sales_per_store_mapper` | `total_reducer` |
+| Display the number of hits for each client ip | `sales_per_category_mapper` | `total_per_key_reducer` |

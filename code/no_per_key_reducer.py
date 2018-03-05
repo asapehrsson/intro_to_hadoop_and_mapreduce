@@ -15,7 +15,7 @@ for line in sys.stdin:
     thisKey, other = data_mapped
 
     if oldKey and oldKey != thisKey:
-        print oldKey, "\t", totalHit
+        print "{0}\t{1}".format(oldKey, totalHit)
         oldKey = thisKey
         totalHit = 0
 
@@ -23,5 +23,4 @@ for line in sys.stdin:
     totalHit += 1
 
 if oldKey is not None:
-    print oldKey, "\t", totalHit
-
+    print "{0}\t{1}".format(oldKey, totalHit)

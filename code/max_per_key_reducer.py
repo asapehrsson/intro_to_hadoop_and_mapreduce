@@ -2,7 +2,7 @@
 
 import sys
 
-maxSale = 0
+maxValue = 0
 oldKey = None
 
 # The input has the format key \t value
@@ -19,15 +19,15 @@ for line in sys.stdin:
     thisKey, thisSale = data_mapped
 
     if oldKey and oldKey != thisKey:
-        print oldKey, "\t", maxSale
+        print "{0}\t{1}".format(oldKey, maxValue)
         oldKey = thisKey
-        maxSale = 0
+        maxValue = 0
 
     oldKey = thisKey
     value = float(thisSale)
 
-    if maxSale < value:
-        maxSale = value
+    if maxValue < value:
+        maxValue = value
 
 if oldKey is not None:
-    print oldKey, "\t", maxSale
+    print "{0}\t{1}".format(oldKey, maxValue)

@@ -2,7 +2,7 @@
 
 import sys
 
-salesTotal = 0
+valueTotal = 0
 oldKey = None
 
 # The input has the format key \t value
@@ -20,13 +20,12 @@ for line in sys.stdin:
     thisKey, thisSale = data_mapped
 
     if oldKey and oldKey != thisKey:
-        print oldKey, "\t", salesTotal
-        oldKey = thisKey;
-        salesTotal = 0
+        print "{0}\t{1}".format(oldKey, valueTotal)
+        oldKey = thisKey
+        valueTotal = 0
 
     oldKey = thisKey
-    salesTotal += float(thisSale)
+    valueTotal += float(thisSale)
 
-if oldKey != None:
-    print oldKey, "\t", salesTotal
-
+if oldKey is not None:
+    print "{0}\t{1}".format(oldKey, valueTotal)

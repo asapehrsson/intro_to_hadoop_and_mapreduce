@@ -18,15 +18,19 @@ pattern = re.compile(r'\s+'.join(parts) + r'\s*\Z')
 inf = get_stream()
 
 for line in inf:
-    data = pattern.match(line).groups()
-    if len(data) == 7:
-        address, identity, username, timestamp, request, statuscode, size = data
-        try:
+    try:
+        data = pattern.match(line).groups()
+
+        if len(data) == 7:
+            address, identity, username, timestamp, request, statuscode, size = data
+
             requestArray = request.split()
 
             if len(requestArray) > 1:
                 path = requestArray[1]
                 print "{0}\t{1}".format(path, identity)
-        except:
-            pass
+
+    except:
+        pass
+
 close_stream(inf)

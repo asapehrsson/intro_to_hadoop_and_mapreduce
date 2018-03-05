@@ -108,3 +108,10 @@ Using command line to sort output:
 ```
 hadoop fs -cat <output>/part-0000 | sort -k2
 ```
+
+## Patterns
+Get testdata:
+
+```
+curl http://content.udacity-data.com/course/hadoop/forum_data.tar.gz > forum_data.tar.gz
+```

@@ -1,26 +1,39 @@
 #!/usr/bin/python
 
-import sys
-
-totalHit = 0
-oldKey = None
+from base import get_stream, close_stream
 
 
-for line in sys.stdin:
-    data_mapped = line.strip().split("\t")
-    if len(data_mapped) != 2:
-        # Something has gone wrong. Skip this line.
-        continue
+def reducer():
+    stream = get_stream()
+    total_hit = 0
+    old_key = None
 
-    thisKey, other = data_mapped
+    for line in stream:
+        data_mapped = line.strip().split("\t")
+        if len(data_mapped) != 2:
+            # Skip this line.
+            continue
 
-    if oldKey and oldKey != thisKey:
-        print "{0}\t{1}".format(oldKey, totalHit)
-        oldKey = thisKey
-        totalHit = 0
+        this_key, other = data_mapped
 
-    oldKey = thisKey
-    totalHit += 1
+        if old_key is None:
+            old_key = this_key
 
-if oldKey is not None:
-    print "{0}\t{1}".format(oldKey, totalHit)
+        if old_key != this_key:
+            print "{0}\t{1}".format(old_key, total_hit)
+            old_key = this_key
+            total_hit = 0
+
+        total_hit += 1
+
+    print "{0}\t{1}".format(old_key, total_hit)
+
+    close_stream(stream)
+
+
+def main():
+    reducer()
+
+
+if __name__ == "__main__":
+    main()

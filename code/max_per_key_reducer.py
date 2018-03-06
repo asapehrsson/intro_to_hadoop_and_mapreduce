@@ -1,33 +1,47 @@
 #!/usr/bin/python
 
-import sys
+from base import get_stream, close_stream
 
-maxValue = 0
-oldKey = None
 
 # The input has the format key \t value
 #
 # The highest value for a particular store will be presented,
 # then the key will change and we'll be dealing with the next store
 
-for line in sys.stdin:
-    data_mapped = line.strip().split("\t")
-    if len(data_mapped) != 2:
-        # Something has gone wrong. Skip this line.
-        continue
+def reducer():
+    max_value = 0
+    old_key = None
+    stream = get_stream()
 
-    thisKey, thisSale = data_mapped
+    for line in stream:
+        data_mapped = line.strip().split("\t")
+        if len(data_mapped) != 2:
+            # Skip this line.
+            continue
 
-    if oldKey and oldKey != thisKey:
-        print "{0}\t{1}".format(oldKey, maxValue)
-        oldKey = thisKey
-        maxValue = 0
+        this_key, this_sale = data_mapped
 
-    oldKey = thisKey
-    value = float(thisSale)
+        if old_key is None:
+            old_key = this_key
 
-    if maxValue < value:
-        maxValue = value
+        if old_key != this_key:
+            print "{0}\t{1}".format(old_key, max_value)
+            old_key = this_key
+            max_value = 0
 
-if oldKey is not None:
-    print "{0}\t{1}".format(oldKey, maxValue)
+        value = float(this_sale)
+
+        if max_value < value:
+            max_value = value
+
+    if old_key is not None:
+        print "{0}\t{1}".format(old_key, max_value)
+    close_stream(stream)
+
+
+def main():
+    reducer()
+
+
+if __name__ == "__main__":
+    main()

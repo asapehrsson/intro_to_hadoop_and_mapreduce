@@ -1,9 +1,6 @@
 #!/usr/bin/python
 
-import sys
-
-valueTotal = 0
-oldKey = None
+from base import get_stream, close_stream
 
 # The input has the format key \t value
 # Where key is a category (store, type, etc), value is the sale amount
@@ -11,21 +8,44 @@ oldKey = None
 # All the sales for a particular category will be presented,
 # then the key will change and we'll be dealing with the next store
 
-for line in sys.stdin:
-    data_mapped = line.strip().split("\t")
-    if len(data_mapped) != 2:
-        # Something has gone wrong. Skip this line.
-        continue
+test_text = """alfa\t5
+alfa\t7
+beta\t3.0
+beta\t1 
+"""
 
-    thisKey, thisSale = data_mapped
 
-    if oldKey and oldKey != thisKey:
-        print "{0}\t{1}".format(oldKey, valueTotal)
-        oldKey = thisKey
-        valueTotal = 0
+def reducer():
+    value_total = 0
+    old_key = None
 
-    oldKey = thisKey
-    valueTotal += float(thisSale)
+    stream = get_stream()
+    for line in stream:
+        data_mapped = line.strip().split("\t")
+        if len(data_mapped) != 2:
+            # Skip this line.
+            continue
 
-if oldKey is not None:
-    print "{0}\t{1}".format(oldKey, valueTotal)
+        this_key, this_value = data_mapped
+
+        if old_key is None:
+            old_key = this_key
+
+        if old_key != this_key:
+            print "{0}\t{1}".format(old_key, value_total)
+            old_key = this_key
+            value_total = 0
+
+        value_total += float(this_value)
+
+    print "{0}\t{1}".format(old_key, value_total)
+
+    close_stream(stream)
+
+
+def main():
+    reducer()
+
+
+if __name__ == "__main__":
+    main()

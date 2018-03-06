@@ -1,10 +1,8 @@
 #!/usr/bin/python
 
 from urlparse import urlparse
-from base import get_stream, close_stream, get_common_log_format
 
-pattern = get_common_log_format()
-inf = get_stream()
+from base import get_stream, close_stream, get_common_log_format
 
 
 def extract_path(value):
@@ -26,19 +24,31 @@ def extract_path(value):
     return result
 
 
-for line in inf:
-    try:
-        data = pattern.match(line).groups()
+def mapper():
+    pattern = get_common_log_format()
+    inf = get_stream()
 
-        if len(data) == 7:
-            address, identity, username, timestamp, request, statuscode, size = data
+    for line in inf:
+        try:
+            data = pattern.match(line).groups()
 
-            path = extract_path(request)
+            if len(data) == 7:
+                address, identity, username, timestamp, request, statuscode, size = data
 
-            if len(path) > 0:
-                print "{0}\t{1}".format(path, identity)
+                path = extract_path(request)
 
-    except:
-        pass
+                if len(path) > 0:
+                    print "{0}\t{1}".format(path, identity)
 
-close_stream(inf)
+        except:
+            pass
+
+    close_stream(inf)
+
+
+def main():
+    mapper()
+
+
+if __name__ == "__main__":
+    main()

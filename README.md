@@ -20,6 +20,10 @@ The simplest way of testing is to prepare a small sample file.
 ```
 tail -200 purchases.txt > samples.txt
 ```
+or
+```
+head -200 purchases.txt > samples.txt
+```
 
 ### Testing individual script
 

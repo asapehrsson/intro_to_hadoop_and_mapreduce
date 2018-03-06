@@ -21,11 +21,12 @@ def reducer():
 
         this_key, this_sale = data_mapped
 
+        # special case - first key
         if old_key is None:
             old_key = this_key
 
         if old_key != this_key:
-            print "{0}\t{1}".format(old_key, max_value)
+            print_result(max_value, old_key)
             old_key = this_key
             max_value = 0
 
@@ -34,9 +35,14 @@ def reducer():
         if max_value < value:
             max_value = value
 
-    if old_key is not None:
-        print "{0}\t{1}".format(old_key, max_value)
+    # special case - last key
+    print_result(max_value, old_key)
+
     close_stream(stream)
+
+
+def print_result(max_value, old_key):
+    print "{0}\t{1}".format(old_key, max_value)
 
 
 def main():

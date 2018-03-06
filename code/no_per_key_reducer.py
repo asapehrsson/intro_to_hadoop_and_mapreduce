@@ -16,19 +16,25 @@ def reducer():
 
         this_key, other = data_mapped
 
+        # special case - first key
         if old_key is None:
             old_key = this_key
 
         if old_key != this_key:
-            print "{0}\t{1}".format(old_key, total_hit)
+            print_result(old_key, total_hit)
             old_key = this_key
             total_hit = 0
 
         total_hit += 1
 
-    print "{0}\t{1}".format(old_key, total_hit)
+    # special case - last key
+    print_result(old_key, total_hit)
 
     close_stream(stream)
+
+
+def print_result(old_key, total_hit):
+    print "{0}\t{1}".format(old_key, total_hit)
 
 
 def main():

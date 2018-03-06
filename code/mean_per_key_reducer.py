@@ -15,13 +15,6 @@ beta\t1
 """
 
 
-def print_result(old_key, total_hit, value_total):
-    mean = 0
-    if value_total != 0:
-        mean = value_total / total_hit
-    print "{0}\t{1}".format(old_key, mean)
-
-
 def reducer():
     value_total = 0
     total_hit = 0
@@ -36,6 +29,7 @@ def reducer():
 
         this_key, this_value = data_mapped
 
+        # special case - first key
         if old_key is None:
             old_key = this_key
 
@@ -48,9 +42,17 @@ def reducer():
         value_total += float(this_value)
         total_hit += 1
 
+    # special case - last key
     print_result(old_key, total_hit, value_total)
 
     close_stream(stream)
+
+
+def print_result(old_key, total_hit, value_total):
+    mean = 0
+    if value_total != 0:
+        mean = value_total / total_hit
+    print "{0}\t{1}".format(old_key, mean)
 
 
 def main():

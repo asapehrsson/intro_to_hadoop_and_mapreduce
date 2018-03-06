@@ -28,19 +28,25 @@ def reducer():
 
         this_key, this_value = data_mapped
 
+        # special case - first key
         if old_key is None:
             old_key = this_key
 
         if old_key != this_key:
-            print "{0}\t{1}".format(old_key, value_total)
+            print_result(old_key, value_total)
             old_key = this_key
             value_total = 0
 
         value_total += float(this_value)
 
-    print "{0}\t{1}".format(old_key, value_total)
+    # special case - last key
+    print_result(old_key, value_total)
 
     close_stream(stream)
+
+
+def print_result(old_key, value_total):
+    print "{0}\t{1}".format(old_key, value_total)
 
 
 def main():

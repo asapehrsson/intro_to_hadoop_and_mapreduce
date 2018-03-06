@@ -11,20 +11,20 @@ from base import get_stream, close_stream
 
 
 def mapper():
-    inf = get_stream()
+    stream = get_stream()
     days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     try:
-        for line in inf:
+        for line in stream:
             data = line.strip().split("\t")
             if len(data) == 6:
                 date, time, store, item, cost, payment = data
                 weekday = days[datetime.strptime(date, "%Y-%m-%d").weekday()]
 
-                print "{0}\t{1}".format(weekday, cost)
+                print "{0}\t{1}".format(weekday, float(cost))
     except:
         pass
 
-    close_stream(inf)
+    close_stream(stream)
 
 
 def main():

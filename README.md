@@ -13,7 +13,58 @@ Then copy the input file to hdfs (it is used in the map job)
 hadoop fs -put data/purchases.txt myinput
 ```
 
-## Develop and debugging the Python scripts
+Running mapreduce:
+
+```
+hadoop jar hadoop-streaming.jar -mapper mapper.py -reducer reducer.py -file base.py -file mapper.py -file reducer.py -input inputfile -output outputfolder
+```
+
+## Sales data tasks
+Data file: data/purchases.txt.gz
+
+| Description | Mapper | Reducer |
+| :--- | :---  |:---  | 
+| Sales breakdown by store | [`sales_per_store_mapper`](code/sales_per_store_mapper.py)  | [`total_per_key_reducer`](code/total_per_key_reducer.py)  |
+| Sales breakdown by product category across all stores | [`sales_per_category_mapper.py`](code/sales_per_category_mapper.py) | [`total_per_key_reducer`](code/total_per_key_reducer.py) |
+| The monetary value for the highest individual sale for each separate store | [`sales_per_store_mapper`](code/sales_per_store_mapper.py) | [`max_per_key_reducer`](code/max_per_key_reducer.py) |
+| Total sales value across all the stores, and the total number of sales | [`sales_per_store_mapper`](code/sales_per_store_mapper.py) | [`total_reducer`](code/total_reducer.py) |
+| Average sales value across all the stores, per weekday | [`sales_per_weekday_mapper`](code/sales_per_weekday_mapper.py) | [`total_reducer`](code/total_reducer.py) |
+| Using combiner: sum of sales value across all the stores, per weekday | [`sales_per_weekday_mapper`](code/sales_per_weekday_mapper.py) | **both combiner and reducer:** [`total_reducer`](code/total_reducer.py) |
+
+## Log data tasks
+Data file access_log.gz
+
+| Description | Mapper | Reducer |
+| :--- | :---  |:---  | 
+| Display the number of hits for each different file on the web site | [`log_url_mapper`](code/log_url_mapper.py) | [`total_per_key_reducer`](code/total_per_key_reducer.py) |
+| Display the number of hits for each client ip | [`log_ip_address_mapper`](code/log_ip_address_mapper.py) | [`total_per_key_reducer`](code/total_per_key_reducer.py)| 
+
+
+## Forum data tasks
+Data file forum_data.tar.gz. Get data by:
+
+```
+curl http://content.udacity-data.com/course/hadoop/forum_data.tar.gz > forum_data.tar.gz
+```
+
+| Description | Mapper | Reducer |
+| :--- | :---  |:---  | 
+| Count number of nodes where 'body' either has NO [.!?] OR exact one in last position | [`forum_csv_filter_mapper`](code/forum_csv_filter_mapper.py) | N/A |
+| Print out 10 lines containing longest posts, sorted in ascending order from shortest to longest | [`forum_csv_body_max_n_mapper`](code/forum_csv_body_max_n_mapper.py) | N/A |
+| Create an index of all the words find in the body of a post. Show times used.  | [`forum_csv_dictionary_mapper` (what=number)](code/forum_csv_dictionary_mapper.py) | [`dictionary_index_reducer`](code/dictionary_index_reducer.py) |
+| Create an index of all the words find in the body of a post. Show used by.  | [`forum_csv_dictionary_mapper` (what=source)](code/forum_csv_dictionary_mapper.py) | [`dictionary_index_reducer`](code/dictionary_index_reducer.py) |
+| Combine some of the forum and user data (aka join). See details in mapper.  |[`forum_combiner_mapper`](code/forum_combiner_mapper.py) |[`forum_combiner_reducer` ](code/forum_combiner_reducer.py) |
+| For each student: what is the hour during which the student has posted the most posts|[`forum_student_hour_mapper`](code/forum_student_hour_mapper.py)|[`key_per_hour_reducer` ](code/key_per_hour_reducer.py)|
+
+## Command line stuff
+
+Using command line to sort output:
+
+```
+hadoop fs -cat <output>/part-0000 | sort -k2
+```
+
+#### Develop and debugging the Python scripts
 
 The simplest way of testing is to prepare a small sample file.  
 
@@ -25,7 +76,7 @@ or
 head -200 purchases.txt > samples.txt
 ```
 
-### Testing individual script
+#### Testing individual script
 
 Pipe the small sample file - or as command line argument
 
@@ -44,7 +95,7 @@ or just enter the input line by line (tab between arguments) and then Cmd-D
 ./mapper.py   
 ```
 
-### Testing the pipeline
+#### Testing the pipeline
 
 Prepare a small sample file that is piped (or used as command line argument)
 
@@ -53,13 +104,7 @@ cat ../data/samples.txt | ./mapper.py | sort | ./reducer.py
 ```
 
 
-## Sales data tasks
-
-Syntax:
-
-```
-hadoop jar hadoop-streaming.jar -mapper mapper.py -reducer reducer.py -file base.py -file mapper.py -file reducer.py -input inputfile -output outputfolder
-```
+#### Example running mapreduce and get the result:
 
 Example, in `code` folder:
 
@@ -71,51 +116,4 @@ Check the result:
 
 ```
 hadoop fs -cat outputfolder/part-00000
-```
-
-
-| Description | Mapper | Reducer |
-| :--- | :---  |:---  | 
-| Sales breakdown by store | [`sales_per_store_mapper`](code/sales_per_store_mapper.py)  | [`total_per_key_reducer`](code/total_per_key_reducer.py)  |
-| Sales breakdown by product category across all stores | `sales_per_category_mapper` | `total_per_key_reducer` |
-| The monetary value for the highest individual sale for each separate store | `sales_per_store_mapper` | `max_per_key_reducer` |
-| Total sales value across all the stores, and the total number of sales | `sales_per_store_mapper` | `total_per_key_reducer` |
-
-## Log data tasks
-The logfile is in Common Log Format:
-```
-10.223.157.186 - - [15/Jul/2009:15:50:35 -0700] "GET /assets/js/lowpro.js HTTP/1.1" 200 10469
-```
-Syntax:
-```
-%h %l %u %t \"%r\" %>s %b
-```
-
-Where:
-
-- %h is the IP address of the client
-- %l is identity of the client, or "-" if it's unavailable
-- %u is username of the client, or "-" if it's unavailable
-- %t is the time that the server finished processing the request. The format is [day/month/year:hour:minute:second zone]
-- %r is the request line from the client is given (in double quotes). It contains the method, path, query-string, and protocol or the request.
-- %>s is the status code that the server sends back to the client. You will see see mostly status codes 200 (OK - The request has succeeded), 304 (Not Modified) and 404 (Not Found). See more information on status codes in W3C.org
-- %b is the size of the object returned to the client, in bytes. It will be "-" in case of status code 304.
-
-
-| Description | Mapper | Reducer |
-| :--- | :---  |:---  | 
-| Display the number of hits for each different file on the web site | `log_url_mapper` | `total_per_key_reducer` |
-| Display the number of hits for each client ip | `log_ip_address_mapper` | `total_per_key_reducer` |
-
-Using command line to sort output:
-
-```
-hadoop fs -cat <output>/part-0000 | sort -k2
-```
-
-## Patterns
-Get testdata:
-
-```
-curl http://content.udacity-data.com/course/hadoop/forum_data.tar.gz > forum_data.tar.gz
 ```

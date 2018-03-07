@@ -76,7 +76,7 @@ hadoop fs -cat outputfolder/part-00000
 
 | Description | Mapper | Reducer |
 | :--- | :---  |:---  | 
-| Sales breakdown by store | `sales_per_store_mapper` | `total_per_key_reducer` |
+| Sales breakdown by store | [`sales_per_store_mapper`](code/sales_per_store_mapper.py)  | [`total_per_key_reducer`](code/total_per_key_reducer.py)  |
 | Sales breakdown by product category across all stores | `sales_per_category_mapper` | `total_per_key_reducer` |
 | The monetary value for the highest individual sale for each separate store | `sales_per_store_mapper` | `max_per_key_reducer` |
 | Total sales value across all the stores, and the total number of sales | `sales_per_store_mapper` | `total_per_key_reducer` |

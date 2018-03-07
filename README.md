@@ -55,6 +55,7 @@ curl http://content.udacity-data.com/course/hadoop/forum_data.tar.gz > forum_dat
 | Create an index of all the words find in the body of a post. Show used by.  | [`forum_csv_dictionary_mapper` (what=source)](code/forum_csv_dictionary_mapper.py) | [`dictionary_index_reducer`](code/dictionary_index_reducer.py) |
 | Combine some of the forum and user data (aka join). See details in mapper.  |[`forum_combiner_mapper`](code/forum_combiner_mapper.py) |[`forum_combiner_reducer` ](code/forum_combiner_reducer.py) |
 | For each student: what is the hour during which the student has posted the most posts|[`forum_student_hour_mapper`](code/forum_student_hour_mapper.py)|[`key_per_hour_reducer` ](code/key_per_hour_reducer.py)|
+| Correlation between question body length and answer length|[`forum_post_and_answer_length_mapper`](code/forum_post_and_answer_length_mapper.py)|[`forum_post_and_answer_length_reducer` ](code/forum_post_and_answer_length_reducer.py)|
 
 ## Command line stuff
 

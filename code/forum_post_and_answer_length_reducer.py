@@ -46,6 +46,7 @@ def reducer():
 
 def print_result(id, question_length, total_answers_length, no_of_answers):
     if question_length > 0:
+        # using ternary conditional operator
         mean_answer_length = total_answers_length / no_of_answers if no_of_answers > 0 else 0
 
         print "{0}\t{1}\t{2}".format(id, question_length, mean_answer_length)
